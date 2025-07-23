@@ -19,7 +19,6 @@ const Index = () => {
   const [totalClicks, setTotalClicks] = useState(0);
   const { toast } = useToast();
 
-  // Load dashboard stats
   useEffect(() => {
     const loadStats = async () => {
       try {
@@ -34,7 +33,6 @@ const Index = () => {
     loadStats();
   }, [refreshTrigger]);
 
-  // Handle redirect simulation
   useEffect(() => {
     const path = window.location.pathname;
     if (path !== '/' && path.length > 1) {
@@ -47,13 +45,12 @@ const Index = () => {
     try {
       const originalUrl = await urlShortenerService.redirectToOriginalUrl(shortcode);
       
-      // Show redirect notification
       toast({
         title: "Redirecting...",
         description: `Taking you to: ${originalUrl}`,
       });
       
-      // Simulate redirect with a delay
+      
       setTimeout(() => {
         window.open(originalUrl, '_blank');
         // Update URL back to dashboard
