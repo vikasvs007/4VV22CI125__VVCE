@@ -109,18 +109,18 @@ const Index = () => {
                   Affordmed URL Shortener
                 </h1>
                 <p className="text-sm text-muted-foreground">
-                  Microservice Demo - Campus Hiring Assessment
+                  {/* Microservice Demo - Campus Hiring Assessment */}
                 </p>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <Badge variant="outline" className="hidden sm:flex">
+              {/* <Badge variant="outline" className="hidden sm:flex">
                 <Zap className="h-3 w-3 mr-1" />
                 React + TypeScript
-              </Badge>
+              </Badge> */}
               
-              <Button
+              {/* <Button
                 variant="outline"
                 size="sm"
                 onClick={() => window.open('https://github.com', '_blank')}
@@ -128,7 +128,7 @@ const Index = () => {
               >
                 <Github className="h-4 w-4" />
                 <span className="hidden sm:inline">View Backend Code</span>
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
