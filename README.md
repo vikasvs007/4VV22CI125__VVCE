@@ -6,7 +6,7 @@ Client → API Gateway → Microservice → Database → Cache → Response
 2. API Gateway validates rate limits
 3. Microservice validates input
 4. Generate/validate shortcode
-5. Store in PostgreSQL
+5. Store in NOsql(mongo)
 6. Cache in Redis
 7. Return shortened URL
 
