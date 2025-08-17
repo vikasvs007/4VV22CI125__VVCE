@@ -3,16 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { urlShortenerService, type ShortUrl } from '@/services/urlShortener';
+import { urlShortenerService } from '@/services/urlShortener';
 import { Copy, ExternalLink, Trash2, BarChart3, Clock, CheckCircle, XCircle } from 'lucide-react';
 
-interface UrlListProps {
-  refreshTrigger: number;
-  onStatsView: (shortcode: string) => void;
-}
+// Props: { refreshTrigger: number, onStatsView: function }
 
-export function UrlList({ refreshTrigger, onStatsView }: UrlListProps) {
-  const [urls, setUrls] = useState<ShortUrl[]>([]);
+export function UrlList({ refreshTrigger, onStatsView }) {
+  const [urls, setUrls] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -36,7 +33,7 @@ export function UrlList({ refreshTrigger, onStatsView }: UrlListProps) {
     loadUrls();
   }, [refreshTrigger]);
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
       toast({
@@ -52,7 +49,7 @@ export function UrlList({ refreshTrigger, onStatsView }: UrlListProps) {
     }
   };
 
-  const deleteUrl = async (shortcode: string) => {
+  const deleteUrl = async (shortcode) => {
     try {
       await urlShortenerService.deleteShortUrl(shortcode);
       await loadUrls();
@@ -69,7 +66,7 @@ export function UrlList({ refreshTrigger, onStatsView }: UrlListProps) {
     }
   };
 
-  const openOriginalUrl = async (shortcode: string) => {
+  const openOriginalUrl = async (shortcode) => {
     try {
       const originalUrl = await urlShortenerService.redirectToOriginalUrl(shortcode);
       window.open(originalUrl, '_blank');

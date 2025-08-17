@@ -4,24 +4,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { urlShortenerService, type CreateShortUrlRequest } from '@/services/urlShortener';
+import { urlShortenerService } from '@/services/urlShortener';
 import { Copy, Link, Clock, Zap } from 'lucide-react';
 
-interface CreateShortUrlProps {
-  onUrlCreated: () => void;
-}
+// Props: { onUrlCreated: function }
 
-export function CreateShortUrl({ onUrlCreated }: CreateShortUrlProps) {
-  const [formData, setFormData] = useState<CreateShortUrlRequest>({
+export function CreateShortUrl({ onUrlCreated }) {
+  const [formData, setFormData] = useState({
     url: '',
     validity: 30,
     shortcode: ''
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<{ shortLink: string; expiry: string } | null>(null);
+  const [result, setResult] = useState(null);
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -46,7 +44,7 @@ export function CreateShortUrl({ onUrlCreated }: CreateShortUrlProps) {
     }
   };
 
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
       toast({

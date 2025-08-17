@@ -3,18 +3,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { urlShortenerService, type ShortUrlStats } from '@/services/urlShortener';
+import { urlShortenerService } from '@/services/urlShortener';
 import { ArrowLeft, BarChart3, Mouse, Clock, MapPin, Globe, CheckCircle, XCircle } from 'lucide-react';
 
-interface UrlStatsProps {
-  shortcode: string;
-  onBack: () => void;
-}
+// Props: { shortcode: string, onBack: function }
 
-export function UrlStats({ shortcode, onBack }: UrlStatsProps) {
-  const [stats, setStats] = useState<ShortUrlStats | null>(null);
+export function UrlStats({ shortcode, onBack }) {
+  const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const loadStats = async () => {

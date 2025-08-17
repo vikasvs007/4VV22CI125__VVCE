@@ -1,57 +1,66 @@
-export interface ShortUrl {
-  id: string;
-  originalUrl: string;
-  shortcode: string;
-  shortLink: string;
-  expiry: string;
-  createdAt: string;
-  clicks: ClickData[];
-  isActive: boolean;
-}
+// JavaScript version - interfaces converted to JSDoc comments for documentation
 
-export interface ClickData {
-  timestamp: string;
-  referrer: string;
-  location: string;
-  userAgent: string;
-}
+/**
+ * @typedef {Object} ShortUrl
+ * @property {string} id
+ * @property {string} originalUrl
+ * @property {string} shortcode
+ * @property {string} shortLink
+ * @property {string} expiry
+ * @property {string} createdAt
+ * @property {ClickData[]} clicks
+ * @property {boolean} isActive
+ */
 
-export interface CreateShortUrlRequest {
-  url: string;
-  validity?: number;
-  shortcode?: string;
-}
+/**
+ * @typedef {Object} ClickData
+ * @property {string} timestamp
+ * @property {string} referrer
+ * @property {string} location
+ * @property {string} userAgent
+ */
 
-export interface CreateShortUrlResponse {
-  shortLink: string;
-  expiry: string;
-}
+/**
+ * @typedef {Object} CreateShortUrlRequest
+ * @property {string} url
+ * @property {number} [validity]
+ * @property {string} [shortcode]
+ */
 
-export interface ShortUrlStats {
-  shortcode: string;
-  originalUrl: string;
-  shortLink: string;
-  totalClicks: number;
-  createdAt: string;
-  expiry: string;
-  isActive: boolean;
-  clicks: ClickData[];
-}
+/**
+ * @typedef {Object} CreateShortUrlResponse
+ * @property {string} shortLink
+ * @property {string} expiry
+ */
+
+/**
+ * @typedef {Object} ShortUrlStats
+ * @property {string} shortcode
+ * @property {string} originalUrl
+ * @property {string} shortLink
+ * @property {number} totalClicks
+ * @property {string} createdAt
+ * @property {string} expiry
+ * @property {boolean} isActive
+ * @property {ClickData[]} clicks
+ */
 
 class UrlShortenerService {
-  private readonly STORAGE_KEY = 'affordmed_short_urls';
-  private readonly BASE_URL = window.location.origin;
+  constructor() {
+    this.STORAGE_KEY = 'affordmed_short_urls';
+    this.BASE_URL = window.location.origin;
+  }
 
-  private getStoredUrls(): ShortUrl[] {
+  getStoredUrls() {
     const stored = localStorage.getItem(this.STORAGE_KEY);
     return stored ? JSON.parse(stored) : [];
   }
 
-  private saveUrls(urls: ShortUrl[]): void {
+  saveUrls(urls) {
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(urls));
   }
 
-  private generateShortcode(): string {
+  generateShortcode() {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
     for (let i = 0; i < 6; i++) {
@@ -60,7 +69,7 @@ class UrlShortenerService {
     return result;
   }
 
-  private isValidUrl(url: string): boolean {
+  isValidUrl(url) {
     try {
       new URL(url);
       return true;
@@ -69,21 +78,21 @@ class UrlShortenerService {
     }
   }
 
-  private isValidShortcode(shortcode: string): boolean {
+  isValidShortcode(shortcode) {
     return /^[a-zA-Z0-9]{3,20}$/.test(shortcode);
   }
 
-  private isExpired(expiry: string): boolean {
+  isExpired(expiry) {
     return new Date() > new Date(expiry);
   }
 
-  private getLocationFromUserAgent(): string {
+  getLocationFromUserAgent() {
     // Simulate location detection - in real app, this would use IP geolocation
     const locations = ['New York, US', 'London, UK', 'Mumbai, IN', 'Singapore, SG', 'Sydney, AU'];
     return locations[Math.floor(Math.random() * locations.length)];
   }
 
-  async createShortUrl(request: CreateShortUrlRequest): Promise<CreateShortUrlResponse> {
+  async createShortUrl(request) {
     // Validate URL
     if (!this.isValidUrl(request.url)) {
       throw new Error('Invalid URL format');
@@ -113,7 +122,7 @@ class UrlShortenerService {
     const validityMinutes = request.validity || 30;
     const expiry = new Date(Date.now() + validityMinutes * 60 * 1000);
 
-    const shortUrl: ShortUrl = {
+    const shortUrl = {
       id: crypto.randomUUID(),
       originalUrl: request.url,
       shortcode,
@@ -133,7 +142,7 @@ class UrlShortenerService {
     };
   }
 
-  async getShortUrlStats(shortcode: string): Promise<ShortUrlStats> {
+  async getShortUrlStats(shortcode) {
     const urls = this.getStoredUrls();
     const shortUrl = urls.find(url => url.shortcode === shortcode);
 
@@ -153,7 +162,7 @@ class UrlShortenerService {
     };
   }
 
-  async redirectToOriginalUrl(shortcode: string): Promise<string> {
+  async redirectToOriginalUrl(shortcode) {
     const urls = this.getStoredUrls();
     const shortUrl = urls.find(url => url.shortcode === shortcode);
 
@@ -166,7 +175,7 @@ class UrlShortenerService {
     }
 
     // Record click
-    const clickData: ClickData = {
+    const clickData = {
       timestamp: new Date().toISOString(),
       referrer: document.referrer || 'Direct',
       location: this.getLocationFromUserAgent(),
@@ -179,14 +188,14 @@ class UrlShortenerService {
     return shortUrl.originalUrl;
   }
 
-  async getAllShortUrls(): Promise<ShortUrl[]> {
+  async getAllShortUrls() {
     return this.getStoredUrls().map(url => ({
       ...url,
       isActive: url.isActive && !this.isExpired(url.expiry)
     }));
   }
 
-  async deleteShortUrl(shortcode: string): Promise<void> {
+  async deleteShortUrl(shortcode) {
     const urls = this.getStoredUrls();
     const filteredUrls = urls.filter(url => url.shortcode !== shortcode);
     
